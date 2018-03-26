@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Altkom.CTI.CSharp.Models
 {
@@ -47,6 +48,8 @@ namespace Altkom.CTI.CSharp.Models
         {
             OrderDate = DateTime.Now;
             Status = OrderStatus.Registered;
+
+            
 
             this.Customer = customer ?? throw new ArgumentNullException(nameof(customer));
 

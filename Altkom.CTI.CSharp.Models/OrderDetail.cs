@@ -16,7 +16,7 @@
         }
 
         public OrderDetail(Item item, int quantity = 1)
-            : this(item, quantity, item.UnitPrice)
+            : this(item, quantity, item==null?0:item.UnitPrice)
         {
 
         }

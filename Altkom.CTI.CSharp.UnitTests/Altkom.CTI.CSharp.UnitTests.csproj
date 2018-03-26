@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Altkom.CTI.CSharp.Models\Altkom.CTI.CSharp.Models.csproj" />
+    <ProjectReference Include="..\Altkom.CTI.CSharp.OrderCalculators\Altkom.CTI.CSharp.OrderCalculators.csproj" />
   </ItemGroup>
 
 </Project>
