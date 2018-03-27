@@ -3,6 +3,8 @@ using Altkom.CTI.CSharp.OrderCalculators;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace Altkom.CTI.CSharp.UnitTests
@@ -10,6 +12,18 @@ namespace Altkom.CTI.CSharp.UnitTests
     [TestClass]
     public class OrderCalculatorUnitTests
     {
+        [TestMethod]
+        public void IsWeekendTest()
+        {
+            DateTime date = DateTime.Parse("2018-03-27");
+
+            // var result = DateTimeHelper.IsWeekend(date);
+
+            var result = date.IsWeekend();
+
+            Assert.IsFalse(result);
+        }
+
         [TestMethod]
         public void HappyHoursTest()
         {
@@ -31,12 +45,38 @@ namespace Altkom.CTI.CSharp.UnitTests
             order.Details.Add(new OrderDetail(monitor, 2));
             order.Details.Add(new OrderDetail(develop, 5));
 
-            IPromotionStrategy strategy = new HappyHoursPromotionStrategy(
-                TimeSpan.FromHours(9), 
-                TimeSpan.FromHours(16), 
-                0.1m);
+            //IPromotionStrategy strategy = new HappyHoursPromotionStrategy(
+            //    TimeSpan.FromHours(9), 
+            //    TimeSpan.FromHours(16), 
+            //    0.1m);
 
-            var calculator = new OrderCalculator(strategy);
+            IDiscountValidator discountValidator = new HappyHoursDiscountValidator(
+                TimeSpan.FromHours(9),
+                TimeSpan.FromHours(16));
+
+            IDiscountCalculator discountCalculator = new PercentageDiscountCalculator(0.1m);
+
+            var calculator = new OrderCalculator(discountValidator, discountCalculator);
+            calculator.Log += LogToConsole;
+            calculator.Log += LogToTrace;
+
+            calculator.Log += Console.WriteLine;
+
+            // metoda anonimowa
+            calculator.Log += delegate (string message)
+            {
+                Console.WriteLine(message);
+            };
+
+
+            calculator.Log += message => Console.WriteLine(message);
+
+            calculator.Log -= LogToConsole;
+
+            var listeners = calculator.Log.GetInvocationList().ToList();
+
+            calculator.Log = null;
+
 
             // Acts
 
@@ -52,6 +92,18 @@ namespace Altkom.CTI.CSharp.UnitTests
             Assert.IsNotNull(order.Customer);
             Assert.IsNotNull(order.OrderNumber);
             Assert.AreEqual(3, order.Details.Count);
+        }
+
+        private string textBox;
+
+        public void LogToConsole(string message)
+        {
+            textBox = message;
+        }
+
+        public void LogToTrace(string message)
+        {
+            Trace.WriteLine(message);
         }
     }
 }

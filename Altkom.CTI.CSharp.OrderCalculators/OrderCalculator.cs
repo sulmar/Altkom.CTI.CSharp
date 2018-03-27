@@ -5,18 +5,30 @@ namespace Altkom.CTI.CSharp.OrderCalculators
 {
     public class OrderCalculator
     {
-        private readonly IPromotionStrategy strategy;
+        private readonly IDiscountValidator discountValidatorStrategy;
+        private readonly IDiscountCalculator discountCalculatorStrategy;
 
-        public OrderCalculator(IPromotionStrategy strategy)
+        public delegate void LogDelegate(string message);
+
+        public LogDelegate Log;
+
+        public OrderCalculator(IDiscountValidator discountValidator, IDiscountCalculator discountCalculator)
         {
-            this.strategy = strategy;
+            this.discountValidatorStrategy = discountValidator;
+            this.discountCalculatorStrategy = discountCalculator;
         }
 
         public decimal CalculateDiscount(Order order)
         {
-            if (strategy.CanDiscount(order))
+            if (Log!=null)
+             Log($"Calculating... {order.OrderNumber}");
+
+            if (discountValidatorStrategy.CanDiscount(order))
             {
-                return strategy.Discount(order);
+                if (Log!=null)
+                    Log("Calculated");
+
+                return discountCalculatorStrategy.Discount(order);
             }
             else
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 
 namespace Altkom.CTI.CSharp.Models
 {
@@ -21,20 +22,23 @@ namespace Altkom.CTI.CSharp.Models
 
         public DateTime DueDate { get; private set; }
 
-        public decimal TotalAmount
-        {
-            get
-            {
-                decimal totalAmount = 0;
+        public decimal TotalAmount => this.Details.Sum(d => d.Quantity * d.UnitPrice);
 
-                foreach (var item in this.Details)
-                {
-                    totalAmount += item.UnitPrice * item.Quantity;
-                }
+        public void Send(string message) => Console.WriteLine(message);
 
-                return totalAmount;
-            }
-        }
+        //public decimal TotalAmount
+        //{
+        //    get
+        //    {
+        //        return this.Details
+        //            .Sum(bla => bla.Quantity * bla.UnitPrice);
+
+        //       // return (from detail in this.Details
+        //        //              select detail.Quantity * detail.UnitPrice).Sum();
+        //    }
+
+         
+        //}
 
         public decimal DiscountAmount { get; set; }
 
