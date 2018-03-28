@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Altkom.CTI.CSharp.Models
+namespace CTI.Models
 {
-    public class Customer : Base
+    public class Customer
     {
-        [MaxLength(3)]
+        public int Id { get; set; }
         public string FirstName { get; set; }
-
         public string LastName { get; set; }
 
         public string FullName
@@ -20,16 +19,28 @@ namespace Altkom.CTI.CSharp.Models
             }
         }
 
-
-        public Customer()
-        {
-
-        }
-
         public Customer(string firstName, string lastName)
         {
             this.FirstName = firstName;
             this.LastName = lastName;
+        }
+    }
+}
+
+namespace Altkom.CTI.CSharp.UnitTests
+{
+   
+
+    [TestClass]
+    public class DynamicUnitTests
+    {
+        [TestMethod]
+        public void DynamicTest()
+        {
+            
+
+
+
         }
     }
 }

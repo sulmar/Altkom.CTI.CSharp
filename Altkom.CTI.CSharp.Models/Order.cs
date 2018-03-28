@@ -5,9 +5,11 @@ using System.Linq;
 
 namespace Altkom.CTI.CSharp.Models
 {
-    public class Order : Base
+    public partial class Order : Base
     {
         public string OrderNumber { get; set; }
+
+        partial void OnOrderDateValidating(DateTime dateTime);
 
         private DateTime orderDate;
         public DateTime OrderDate
@@ -15,8 +17,17 @@ namespace Altkom.CTI.CSharp.Models
             get { return this.orderDate; }
             set
             {
+                // walidacja przed
+                OnOrderDateValidating(value);
+
+                //if (value < DateTime.Today)
+                //{
+                //    throw new ArgumentOutOfRangeException();
+                //}
+
                 this.orderDate = value;
                 this.DueDate = OrderDate.AddDays(14);
+
             }
         }
 
@@ -37,10 +48,26 @@ namespace Altkom.CTI.CSharp.Models
         //        //              select detail.Quantity * detail.UnitPrice).Sum();
         //    }
 
-         
+
         //}
 
-        public decimal DiscountAmount { get; set; }
+
+        partial void OnDiscountAmountValidating(decimal amount);
+
+        private decimal discountAmount;
+        public decimal DiscountAmount
+        {
+            get
+            {
+                return discountAmount;
+            }
+            set
+            {
+                OnDiscountAmountValidating(value);
+
+                discountAmount = value;
+            }
+        }
 
         public OrderStatus Status { get; set; }
 
@@ -52,10 +79,10 @@ namespace Altkom.CTI.CSharp.Models
         {
             OrderDate = DateTime.Now;
             Status = OrderStatus.Registered;
-
-            
-
             this.Customer = customer ?? throw new ArgumentNullException(nameof(customer));
+
+
+            // 
 
         }
 

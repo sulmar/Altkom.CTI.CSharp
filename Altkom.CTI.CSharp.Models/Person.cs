@@ -4,12 +4,8 @@ using System.Text;
 
 namespace Altkom.CTI.CSharp.Models
 {
-    public enum OrderStatus
+    public class Person
     {
-        Registered,
-        Completing,
-        Canceled,
-        Sent,
-        Completed
+        public string Name { get; set; }
     }
 }
